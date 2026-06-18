@@ -71,3 +71,18 @@ void print_menu()
     printf("---------------------------------------------------------------------------\n");
     printf("선택 : ");
 }
+
+void view_task()
+{
+    for(int i = 0; i <= count - 1; i++)
+    {
+        if(state[i] == 0)
+            printf("[   ]");
+        else if(state[i] == 1)
+            printf("[ V ]");
+        else if(state[1] == 2)
+            printf("[ X ]");
+        printf("%d. %s\n", i, task[i]);
+    }
+    printf("---------------------------------------------------------------------------\n");
+}
