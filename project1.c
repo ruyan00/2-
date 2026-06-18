@@ -2,11 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define MAX_TASK 100
-#define MAX_LEN   100
-
-char task[MAX_TASK][MAX_LEN];
-int state[MAX_TASK];   // 0: 진행중, 1: 완료, 2: 삭제
+char task[100][100];
+int state[100];   // 0: 진행중, 1: 완료, 2: 삭제
 int count = 0;
 
 /* 함수 선언 */
@@ -28,7 +25,7 @@ int main(void)
         if (fgets(input, sizeof(input), stdin) == NULL)
             continue;
 
-        trim_newline(input);
+        input[strcspn(input, "\n")] = '\0';
 
         if (strlen(input) == 0)
             continue;
@@ -49,7 +46,7 @@ int main(void)
             case 4:
                 delete_task();
                 break;
-            case 0:
+            case 5:
                 printf("프로그램을 종료합니다.\n");
                 return 0;
             default:
@@ -57,3 +54,20 @@ int main(void)
                 break;
         }
     }
+
+    return 0;
+}
+
+void print_menu()
+{
+    printf("---------------------------------------------------------------------------\n");
+    printf("                                   To-Do 리스트\n");
+    printf("---------------------------------------------------------------------------\n");
+    printf("1. 할 일 보기\n");
+    printf("2. 할 일 추가\n");
+    printf("3. 할 일 완료\n");
+    printf("4. 할 일 삭제\n");
+    printf("5. 종료\n");
+    printf("---------------------------------------------------------------------------\n");
+    printf("선택 : ");
+}
