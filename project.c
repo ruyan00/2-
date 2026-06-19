@@ -104,7 +104,7 @@ void add_task()
     char temp[101];
     while(1)
     {
-        printf("할일을 입력하세요 : ");
+        printf("할 일을 입력하세요 : ");
         fgets(temp,sizeof(temp),stdin);
         if(strncmp(temp, "Q\n", 101) == 0 || strncmp(temp, "q\n", 101) == 0)
             break;
