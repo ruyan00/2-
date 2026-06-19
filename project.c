@@ -76,23 +76,7 @@ void print_menu()
 
 void view_task()
 {
-    char temp[10];
-    if(count == 0)
-        printf("등록된 할 일이 없습니다.\n");
-    else
-    {
-        for(int i = 0; i <= count - 1; i++)
-        {
-            if(state[i] == 0)
-                printf("[   ]");
-            else if(state[i] == 1)
-                printf("[ V ]");
-            else if(state[i] == 2)
-                printf("[ X ]");
-            printf("%d. %s\n", i, task[i]);
-        }
-        printf("---------------------------------------------------------------------------\n");
-    }
+    print_task_list();
     wait_q();
 }
 
@@ -115,8 +99,6 @@ void add_task()
     
         printf("\n");
         printf("할 일 추가 완료\n");
-
-        wait_q();
     }
 }
 
@@ -140,6 +122,29 @@ void wait_q()
         if (quit(input))
             break;
     }
+}
+
+void print_task_list()
+{
+    int i;
+
+    if (count == 0)
+    {
+        printf("등록된 할 일이 없습니다.\n");
+        return;
+    }
+
+    for (i = 0; i < count; i++)
+    {
+        if (state[i] == 0)
+            printf("[ ] %s\n", task[i]);
+        else if (state[i] == 1)
+            printf("[V] %s\n", task[i]);
+        else if (state[i] == 2)
+            printf("[X] %s\n", task[i]);
+    }
+
+    printf("---------------------------------------------------------------------------\n");
 }
     printf("---------------------------------------------------------------------------\n");
 }
