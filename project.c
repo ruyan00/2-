@@ -12,6 +12,8 @@ void view_task();
 void add_task();
 void complete_task();
 void delete_task();
+int quit(char input[]);
+void wait_q();
 
 int main(void)
 {
@@ -91,12 +93,7 @@ void view_task()
         }
         printf("---------------------------------------------------------------------------\n");
     }
-    while(1)
-    {
-        fgets(temp,sizeof(temp),stdin);
-        if(strncmp(temp, "Q\n", 10) == 0 || strncmp(temp, "q\n", 10) == 0)
-            break;
-    }
+    wait_q();
 }
 
 void add_task()
@@ -104,7 +101,7 @@ void add_task()
     char temp[101];
     while(1)
     {
-        printf("할 일을 입력하세요 : ");
+        printf("할일을 입력하세요 : ");
         fgets(temp,sizeof(temp),stdin);
         if(strncmp(temp, "Q\n", 101) == 0 || strncmp(temp, "q\n", 101) == 0)
             break;
@@ -118,6 +115,30 @@ void add_task()
     
         printf("\n");
         printf("할 일 추가 완료\n");
+
+        wait_q();
+    }
+}
+
+int quit(char input[])
+{
+    return (strcmp(input, "Q") == 0 || strcmp(input, "q") == 0);
+}
+
+void wait_q()
+{
+    char input[20];
+
+    while (1)
+    {
+        printf("Q를 입력하면 메인 화면으로 돌아갑니다. : ");
+        if (fgets(input, sizeof(input), stdin) == NULL)
+            continue;
+
+        input[strcspn(input, "\n")] = '\0';
+
+        if (quit(input))
+            break;
     }
 }
     printf("---------------------------------------------------------------------------\n");
