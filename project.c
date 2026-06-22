@@ -1,38 +1,32 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 
 char task[100][100];
 int state[100];   // 0: 진행중, 1: 완료, 2: 삭제
-int count = 0;
+int count = 0;  // 현재 만든 일 수
+int selecte_num = 0;
 
-/* 함수 선언 */
+// 함수 선언
 void print_menu();
+void wait_q();
+int  quit(char input[]);
 void view_task();
 void add_task();
 void complete_task();
 void delete_task();
-int quit(char input[]);
-void wait_q();
+void print_task_list();
+int  decide_num();
 
 int main(void)
 {
-    char input[20];
     int menu;
 
     while (1)
     {
         print_menu();
 
-        if (fgets(input, sizeof(input), stdin) == NULL)
-            continue;
-
-        input[strcspn(input, "\n")] = '\0';
-
-        if (strlen(input) == 0)
-            continue;
-
-        menu = atoi(input);
+        scanf("%d", &menu);
+        getchar();
 
         switch (menu)
         {
@@ -52,7 +46,6 @@ int main(void)
                 printf("프로그램을 종료합니다.\n");
                 return 0;
             default:
-                printf("잘못된 입력입니다.\n");
                 break;
         }
     }
@@ -74,34 +67,6 @@ void print_menu()
     printf("선택 : ");
 }
 
-void view_task()
-{
-    print_task_list();
-    wait_q();
-}
-
-void add_task()
-{
-    char temp[101];
-    while(1)
-    {
-        printf("할일을 입력하세요 : ");
-        fgets(temp,sizeof(temp),stdin);
-        if(strncmp(temp, "Q\n", 101) == 0 || strncmp(temp, "q\n", 101) == 0)
-            break;
-        else
-        {
-            temp[100] = 0;
-            strncpy(task[count], temp, 100);
-            count++;
-        }
-
-    
-        printf("\n");
-        printf("할 일 추가 완료\n");
-    }
-}
-
 int quit(char input[])
 {
     return (strcmp(input, "Q") == 0 || strcmp(input, "q") == 0);
@@ -113,10 +78,9 @@ void wait_q()
 
     while (1)
     {
-        printf("Q를 입력하면 메인 화면으로 돌아갑니다. : ");
-        if (fgets(input, sizeof(input), stdin) == NULL)
-            continue;
-
+        printf("Q를 입력하면 메인 화면으로 돌아갑니다 : ");
+        
+        fgets(input, sizeof(input), stdin);
         input[strcspn(input, "\n")] = '\0';
 
         if (quit(input))
@@ -133,18 +97,177 @@ void print_task_list()
         printf("등록된 할 일이 없습니다.\n");
         return;
     }
+    printf("---------------------------------------------------------------------------\n");
+    printf("\n");
+    printf("---------------------------------------------------------------------------\n");
+    printf("                                   To-Do 리스트\n");
+    printf("---------------------------------------------------------------------------\n");
 
     for (i = 0; i < count; i++)
     {
         if (state[i] == 0)
-            printf("[ ] %s\n", task[i]);
+            printf("%d. [ ] %s\n", i + 1, task[i]);
         else if (state[i] == 1)
-            printf("[V] %s\n", task[i]);
+            printf("%d. [V] %s\n", i + 1, task[i]);
         else if (state[i] == 2)
-            printf("[X] %s\n", task[i]);
+            printf("%d. [X] %s\n", i + 1, task[i]);
     }
 
     printf("---------------------------------------------------------------------------\n");
+}
+
+void view_task()
+{
+    print_task_list();
+    wait_q();
+}
+
+void add_task()
+{
+    char input[100];
+    printf("Q를 입력하면 메인 화면으로 돌아갑니다.\n");
+
+    while (1)
+    {
+        printf("할 일을 입력하세요. : ");
+
+        fgets(input, sizeof(input), stdin);
+        input[strcspn(input, "\n")] = '\0';
+            
+        if (quit(input))
+            return;
+
+        if (strlen(input) == 0)
+        {
+            continue;
+        }
+
+        if (count >= 100)
+        {
+            printf("할 일이 너무 많습니다. 더 이상 추가할 수 없습니다.\n");
+            return;
+        }
+
+        strcpy(task[count], input);
+        state[count] = 0;
+        count++;
+
+        printf("할 일 추가 완료\n");
+    }
+}
+
+int decide_num()
+{
+    char input[30];
+    int value;
+
+    fgets(input, sizeof(input), stdin);
+    input[strcspn(input, "\n")] = '\0';
+
+    if (quit(input))
+        return -1;
+
+    if (sscanf(input, "%d", &value) != 1)
+        return 0;
+
+    selecte_num = value;
+    return 1;
+}
+
+void complete_task()
+{
+    int result;
+
+    if (count == 0)
+    {
+        printf("등록된 할 일이 없습니다.\n");
+        wait_q();
+        return;
+    }
+    
+    print_task_list();
+    printf("Q를 입력하면 메인 화면으로 돌아갑니다.\n");
+    while (1)
+    {
+        printf("완료 처리할 번호를 입력해주세요. : ");
+        result = decide_num();
+
+        if (result == -1)
+            return;
+
+        else if (result == 0)
+        {
+            printf("잘못된 입력입니다.\n");
+        }
+
+        else if (selecte_num < 1 || selecte_num > count)
+        {
+            printf("존재하지 않는 번호입니다.\n");
+        }
+
+        else if (state[selecte_num - 1] == 1)
+        {
+            printf("이미 완료된 할 일입니다.\n");
+
+        }
+
+        else if (state[selecte_num - 1] == 2)
+        {
+            printf("이미 삭제된 할 일입니다.\n");
+        }
+
+        else 
+        {
+            state[selecte_num - 1] = 1;
+            printf("할 일이 완료 처리되었습니다.\n");
+        }
+    }
+    return;
+}
+
+void delete_task()
+{
+    int result;
+
+    if (count == 0)
+    {
+        printf("등록된 할 일이 없습니다.\n");
+        wait_q();
+        return;
+    }
+
+    print_task_list();
+    printf("Q를 입력하면 메인 화면으로 돌아갑니다.\n");
+    while (1)
+    {
+        printf("삭제할 번호를 입력해주세요. : ");
+        result = decide_num();
+
+        if (result == -1)
+            return;
+
+        else if (result == 0)
+        {
+            printf("잘못된 입력입니다.\n");
+        }
+
+        else if (selecte_num < 1 || selecte_num > count)
+        {
+            printf("존재하지 않는 번호입니다.\n");
+        }
+
+        else if (state[selecte_num - 1] == 2)
+        {
+            printf("이미 삭제된 할 일입니다.\n");
+        }
+
+        else
+        {
+            state[selecte_num - 1] = 2;
+            printf("할 일이 삭제되었습니다.\n");
+        }
+    }
+    return;
 }
     printf("---------------------------------------------------------------------------\n");
 }
