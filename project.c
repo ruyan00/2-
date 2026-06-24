@@ -2,19 +2,19 @@
 #include <string.h>
 
 char task[100][100];
-int state[100];   // 0: 진행중, 1: 완료, 2: 삭제
-int count = 0;  // 현재 만든 일 수
+int state[100];    // 0: 진행중, 1: 완료, 2: 삭제
+int count = 0;    // 현재 만든 일 수
 int selecte_num = 0;
 
 // 함수 선언
 void print_menu();
-void wait_q();
+void wait_q();   
 int  quit(char input[]);
-void view_task();
-void add_task();
-void complete_task();
-void delete_task();
-void print_task_list();
+void view_task();    //할 일 보기 함수
+void add_task();    //할 일 추가 함수
+void complete_task();    //할 일 완료 함수
+void delete_task();    //할 일 삭제 함수
+void print_task_list();    //할 일 출력 함수
 int  decide_num();
 
 int main(void)
