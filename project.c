@@ -2,19 +2,18 @@
 #include <string.h>
 
 char task[100][100];
-int state[100];    // 0: 진행중, 1: 완료, 2: 삭제
-int count = 0;    // 현재 등록된 할 일 수
+int state[100];   // 0: 진행중, 1: 완료, 2: 삭제
+int count = 0;  // 현재 만든 일 수
 int selecte_num = 0;
 
 // 함수 선언
-void print_menu();    //메인화면 함수
-void wait_q();   
-int  quit(char input[]);    //q 또는 Q 입력 시 메인화면 귀환
-void view_task();    //할 일 보기 함수
-void add_task();    //할 일 추가 함수
-void complete_task();    //할 일 완료 함수
-void delete_task();    //할 일 삭제 함수
-void print_task_list();    //할 일 출력 함수
+void print_menu();
+void wait_q();
+void view_task();
+void add_task();
+void complete_task();
+void delete_task();
+void print_task_list();
 int  decide_num();
 
 int main(void)
@@ -25,7 +24,7 @@ int main(void)
     {
         print_menu();
 
-        scanf(" %c", &menu);
+        scanf(" %s", &menu);
         while(getchar() != '\n'); // abcd\n
 
 
@@ -68,14 +67,9 @@ void print_menu()
     printf("선택 : ");
 }
 
-int quit(char input[])
-{
-    return (strcmp(input, "Q") == 0 || strcmp(input, "q") == 0);
-}
-
 void wait_q()
 {
-    char input[20];
+    char input[1000];
 
     while (1)
     {
@@ -84,7 +78,7 @@ void wait_q()
         fgets(input, sizeof(input), stdin);
         input[strcspn(input, "\n")] = '\0';
 
-        if (quit(input))
+        if (strcmp(input, "Q") == 0 || strcmp(input, "q") == 0)
             break;
     }
 }
@@ -126,6 +120,7 @@ void view_task()
 void add_task()
 {
     char input[1000];
+    
     printf("Q를 입력하면 메인 화면으로 돌아갑니다.\n");
 
     while (1)
@@ -135,7 +130,7 @@ void add_task()
         fgets(input, sizeof(input), stdin);
         input[strcspn(input, "\n")] = '\0';
             
-        if (quit(input))
+        if (strcmp(input, "Q") == 0 || strcmp(input, "q") == 0)
             return;
 
         else if (strlen(input) == 0)
@@ -165,19 +160,17 @@ void add_task()
 
 int decide_num()
 {
-    char input[100];
-    int value;
+    char input[1000];
 
     fgets(input, sizeof(input), stdin);
     input[strcspn(input, "\n")] = '\0';
 
-    if (quit(input))
+    if (strcmp(input, "Q") == 0 || strcmp(input, "q") == 0)
         return -1;
 
-    if (sscanf(input, "%d", &value) != 1)
+    if (sscanf(input, "%d", &selecte_num) != 1)
         return 0;
 
-    selecte_num = value;
     return 1;
 }
 
@@ -215,7 +208,6 @@ void complete_task()
         else if (state[selecte_num - 1] == 1)
         {
             printf("이미 완료된 할 일입니다.\n");
-
         }
 
         else if (state[selecte_num - 1] == 2)
@@ -274,5 +266,7 @@ void delete_task()
             printf("할 일이 삭제되었습니다.\n");
         }
     }
+    return;
+}
     return;
 }
